@@ -30,7 +30,7 @@ cd docker-vuln-scanner
 ## Usage
 
 ```bash
-sudo python3 scanner.py paranoid > log.txt
+sudo python3 scanner.py paranoid
 ```
 
 > **Note** By default, published ports are exposed to all interfaces (0.0.0.0), and user namespace remapping is disabled unless configured in the Docker daemon. The scanner flags these cases.
