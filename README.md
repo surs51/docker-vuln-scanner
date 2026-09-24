@@ -133,47 +133,10 @@ docker run -d \
 
 #### Scan & output
 
-```
-$ dvscan
-dvscan 2.0.0 - mode: full
+<img width="938" height="731" alt="Screenshot 2026-09-24 233650" src="https://github.com/user-attachments/assets/2d60f52b-42b0-4d5a-baa2-96721d8d0ffc" />
 
-[!] host Docker 27.3.1 on Ubuntu 24.04.1 LTS, runc 1.1.14
-    CRITICAL  runc 1.1.14 is affected by CVE-2025-31133, CVE-2025-52565, CVE-2025-52881: mount races let a container write to host /proc files and break out [runc-cve]
-              -> Upgrade runc to 1.2.8 / 1.3.3 / 1.4.0-rc.3 or newer and restart your containers.
 
-[!] container nginx-insecure (3f2a9c1b7d0e, nginx)
-    HIGH      Runs as root (no user set) [root-user]
-              -> Add a non-root USER to the Dockerfile, or run with --user 1000:1000.
-    MEDIUM    Runs with Docker's default capability set [cap-drop]
-              -> Use --cap-drop ALL and add back only the capabilities the workload needs.
-    MEDIUM    no-new-privileges is not set, so setuid binaries can raise privileges [no-new-privileges]
-              -> Run with --security-opt no-new-privileges:true, or set "no-new-privileges": true in
-                 daemon.json.
-    MEDIUM    Writable root filesystem [writable-rootfs]
-              -> Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp.
-    LOW       Uses nginx, which is not pinned to a version [latest-tag]
-              -> Use a specific version tag, or better, pin by digest (image@sha256:...).
-    LOW       No CPU limit [no-cpu-limit]
-              -> Set --cpus (cpus or deploy.resources.limits.cpus in Compose).
-    LOW       No healthcheck [no-healthcheck]
-              -> Add a HEALTHCHECK so a hung process gets noticed and restarted.
-    LOW       No memory limit [no-memory-limit]
-              -> Set --memory (mem_limit or deploy.resources.limits.memory in Compose).
-    LOW       No PID limit [no-pids-limit]
-              -> Set --pids-limit so a fork bomb can't take down the host.
-
-[!] container nginx-secure (a91d0c33e2b4, nginxinc/nginx-unprivileged)
-    LOW       8082/tcp published on 0.0.0.0:8081 [exposed-port]
-              -> If it only needs to be reachable locally or through a reverse proxy, bind it to
-                 127.0.0.1. Docker's port rules bypass host firewalls such as ufw.
-    LOW       Uses nginxinc/nginx-unprivileged, which is not pinned to a version [latest-tag]
-              -> Use a specific version tag, or better, pin by digest (image@sha256:...).
-    LOW       No healthcheck [no-healthcheck]
-              -> Add a HEALTHCHECK so a hung process gets noticed and restarted.
-
-Summary: 3 targets, 13 findings: 1 critical, 1 high, 3 medium, 8 low
-```
-
+[Test Report](test_report.json)
 > **Note:** Published ports bind to all interfaces (`0.0.0.0`) unless you give an address, and Docker writes its own iptables rules, so `ufw` and similar firewalls won't block them. Port 80/443 on a web server is expected. A database on `0.0.0.0` usually isn't.
 
 ## Test lab
