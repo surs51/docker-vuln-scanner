@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: pytest
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Start a bad and a good container
+        run: |
+          docker run -d --name bad -p 6379:6379 -v /var/run/docker.sock:/var/run/docker.sock redis:7.4
+          docker run -d --name good --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --memory 128m --cpus 0.5 --pids-limit 64 --user 999 redis:7.4
+      - run: dvscan paranoid
+      - name: The bad container fails the build, the good one doesn't
+        run: |
+          dvscan host bad --fail-on critical && exit 1 || test $? -eq 1
+          dvscan host good --format json | python -c "
+          import json, sys
+          report = json.load(sys.stdin)
+          good = next(t for t in report['targets'] if t['name'] == 'good')
+          assert not [f for f in good['findings'] if f['severity'] in ('critical', 'high')], good
+          "

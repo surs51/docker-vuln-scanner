@@ -1,0 +1,734 @@
+{
+  "tool": {
+    "name": "dvscan",
+    "version": "2.0.0"
+  },
+  "mode": "paranoid",
+  "scanned_at": "2026-09-24T20:35:48+00:00",
+  "environment": {
+    "docker": "28.5.2+dfsg4",
+    "os": "Kali GNU/Linux Rolling",
+    "runc": "1.3.6+ds1"
+  },
+  "summary": {
+    "critical": 4,
+    "high": 18,
+    "medium": 25,
+    "low": 42,
+    "total": 89,
+    "ignored": 1
+  },
+  "targets": [
+    {
+      "kind": "host",
+      "name": "Docker 28.5.2+dfsg4 on Kali GNU/Linux Rolling, runc 1.3.6+ds1",
+      "findings": [
+        {
+          "rule": "userns-remap",
+          "severity": "low",
+          "title": "User namespace remapping disabled",
+          "message": "Neither userns-remap nor rootless mode is enabled",
+          "fix": "Enable userns-remap in daemon.json or run Docker rootless, so root in a container is not root on the host."
+        },
+        {
+          "rule": "icc",
+          "severity": "low",
+          "title": "Containers on the default bridge can talk to each other",
+          "message": "Containers on the default bridge can talk to each other",
+          "fix": "Set \"icc\": false in daemon.json, or move containers onto user-defined networks."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-hardened",
+      "id": "2b7d738c9ca9",
+      "image": "redis:7.4",
+      "findings": []
+    },
+    {
+      "kind": "container",
+      "name": "lab-accepted",
+      "id": "57c293c21c7d",
+      "image": "alpine:3.20",
+      "findings": [
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-sshd",
+      "id": "1f31d8e4c307",
+      "image": "alpine:3.20",
+      "findings": [
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "sshd-running",
+          "severity": "medium",
+          "title": "SSH server running in container",
+          "message": "sshd is running inside the container",
+          "fix": "Take sshd out of the image and use docker exec when you need a shell."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-leaky",
+      "id": "ecc61cd70a14",
+      "image": "dvscan-lab/leaky:1.0",
+      "findings": [
+        {
+          "rule": "secret-in-env",
+          "severity": "high",
+          "title": "Secret in environment variable",
+          "message": "DB_PASSWORD looks like a credential",
+          "fix": "Pass secrets as files instead (Docker/Compose secrets or a read-only mount). Environment variables show up in docker inspect, /proc and crash reports."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "sensitive-port",
+          "severity": "medium",
+          "title": "Sensitive service published on all interfaces",
+          "message": "SSH (22/tcp) published on 0.0.0.0:2222",
+          "fix": "Publish it on localhost (127.0.0.1:2222:22) or keep it on an internal network without publishing it. Docker's port rules bypass host firewalls such as ufw."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-postgres",
+      "id": "905d8fe05893",
+      "image": "postgres:16",
+      "findings": [
+        {
+          "rule": "sensitive-port",
+          "severity": "high",
+          "title": "Sensitive service published on all interfaces",
+          "message": "PostgreSQL (5432/tcp) published on 0.0.0.0:5432",
+          "fix": "Publish it on localhost (127.0.0.1:5432:5432) or keep it on an internal network without publishing it. Docker's port rules bypass host firewalls such as ufw."
+        },
+        {
+          "rule": "insecure-env",
+          "severity": "high",
+          "title": "Security feature turned off through the environment",
+          "message": "POSTGRES_HOST_AUTH_METHOD: PostgreSQL accepts logins without a password",
+          "fix": "Remove the setting and configure authentication or certificates properly."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-redis",
+      "id": "6f50a53c60f3",
+      "image": "redis:7.4",
+      "findings": [
+        {
+          "rule": "sensitive-port",
+          "severity": "high",
+          "title": "Sensitive service published on all interfaces",
+          "message": "Redis (6379/tcp) published on 0.0.0.0:6379",
+          "fix": "Publish it on localhost (127.0.0.1:6379:6379) or keep it on an internal network without publishing it. Docker's port rules bypass host firewalls such as ufw."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-escape",
+      "id": "39ff867235ac",
+      "image": "alpine:3.20",
+      "findings": [
+        {
+          "rule": "dangerous-capability",
+          "severity": "critical",
+          "title": "Dangerous capability added",
+          "message": "CAP_SYS_ADMIN added with seccomp and AppArmor turned off",
+          "fix": "Remove the capability. Most workloads run fine with --cap-drop ALL plus one or two specific additions."
+        },
+        {
+          "rule": "sensitive-mount",
+          "severity": "critical",
+          "title": "Sensitive host path mounted",
+          "message": "Host /etc mounted read-write at /host/etc",
+          "fix": "Mount only the specific files or directories the container needs, read-only where possible."
+        },
+        {
+          "rule": "seccomp-disabled",
+          "severity": "high",
+          "title": "Seccomp disabled",
+          "message": "Runs with seccomp=unconfined",
+          "fix": "Remove seccomp=unconfined. If a syscall gets blocked, use a custom profile that allows just that syscall."
+        },
+        {
+          "rule": "apparmor-disabled",
+          "severity": "high",
+          "title": "AppArmor disabled",
+          "message": "Runs with apparmor=unconfined",
+          "fix": "Remove apparmor=unconfined, or write a profile tailored to the workload."
+        },
+        {
+          "rule": "selinux-disabled",
+          "severity": "high",
+          "title": "SELinux separation disabled",
+          "message": "Runs with label=disable",
+          "fix": "Remove label=disable and relabel volumes with :z or :Z instead."
+        },
+        {
+          "rule": "host-namespace",
+          "severity": "high",
+          "title": "Host namespace shared",
+          "message": "Shares the host PID namespace (--pid=host)",
+          "fix": "Drop the host namespace flag. Publish ports or mount volumes for whatever the container needs from the host."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-socket",
+      "id": "afddd18cdc4b",
+      "image": "alpine:3.20",
+      "findings": [
+        {
+          "rule": "docker-socket",
+          "severity": "critical",
+          "title": "Container runtime socket mounted",
+          "message": "/var/run/docker.sock mounted at /var/run/docker.sock (read-only makes no difference for a socket)",
+          "fix": "Remove the socket mount. If the container really needs the Docker API, put a socket proxy in front of it that only allows the calls it uses."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "cap-drop",
+          "severity": "medium",
+          "title": "Default capabilities kept",
+          "message": "Runs with Docker's default capability set",
+          "fix": "Use --cap-drop ALL and add back only the capabilities the workload needs."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "container",
+      "name": "lab-privileged",
+      "id": "bb521bdda7a6",
+      "image": "alpine:3.20",
+      "findings": [
+        {
+          "rule": "privileged",
+          "severity": "critical",
+          "title": "Privileged container",
+          "message": "Runs with --privileged: every capability, every host device, no seccomp or AppArmor",
+          "fix": "Remove --privileged (privileged: true) and grant only the specific capabilities or devices the workload needs."
+        },
+        {
+          "rule": "root-user",
+          "severity": "high",
+          "title": "Runs as root",
+          "message": "Runs as root (no user set)",
+          "fix": "Add a non-root USER to the Dockerfile, or run with --user 1000:1000."
+        },
+        {
+          "rule": "no-new-privileges",
+          "severity": "medium",
+          "title": "Privilege escalation not blocked",
+          "message": "no-new-privileges is not set, so setuid binaries can raise privileges",
+          "fix": "Run with --security-opt no-new-privileges:true, or set \"no-new-privileges\": true in daemon.json."
+        },
+        {
+          "rule": "writable-rootfs",
+          "severity": "medium",
+          "title": "Writable root filesystem",
+          "message": "Writable root filesystem",
+          "fix": "Run with --read-only and mount a tmpfs for the paths that need writes, like /tmp."
+        },
+        {
+          "rule": "no-memory-limit",
+          "severity": "low",
+          "title": "No memory limit",
+          "message": "No memory limit",
+          "fix": "Set --memory (mem_limit or deploy.resources.limits.memory in Compose)."
+        },
+        {
+          "rule": "no-cpu-limit",
+          "severity": "low",
+          "title": "No CPU limit",
+          "message": "No CPU limit",
+          "fix": "Set --cpus (cpus or deploy.resources.limits.cpus in Compose)."
+        },
+        {
+          "rule": "no-pids-limit",
+          "severity": "low",
+          "title": "No PID limit",
+          "message": "No PID limit",
+          "fix": "Set --pids-limit so a fork bomb can't take down the host."
+        },
+        {
+          "rule": "no-healthcheck",
+          "severity": "low",
+          "title": "No healthcheck",
+          "message": "No healthcheck",
+          "fix": "Add a HEALTHCHECK so a hung process gets noticed and restarted."
+        },
+        {
+          "rule": "default-bridge",
+          "severity": "low",
+          "title": "Attached to the default bridge network",
+          "message": "Attached to the default bridge network",
+          "fix": "Put the container on a user-defined network so unrelated containers can't reach it."
+        }
+      ]
+    },
+    {
+      "kind": "image",
+      "name": "dvscan-lab/leaky:1.0",
+      "id": "c329f85a2b13",
+      "used_by": [
+        "lab-leaky"
+      ],
+      "findings": [
+        {
+          "rule": "secret-in-history",
+          "severity": "high",
+          "title": "Secret in image history",
+          "message": "Build argument NPM_TOKEN looks like a credential",
+          "fix": "Anyone who can pull the image can read its history. Rebuild without the secret (RUN --mount=type=secret for build-time secrets) and rotate the credential."
+        },
+        {
+          "rule": "secret-in-history",
+          "severity": "high",
+          "title": "Secret in image history",
+          "message": "ARG NPM_TOKEN default looks like a credential",
+          "fix": "Anyone who can pull the image can read its history. Rebuild without the secret (RUN --mount=type=secret for build-time secrets) and rotate the credential."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}
